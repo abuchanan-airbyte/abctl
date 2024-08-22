@@ -1,31 +1,26 @@
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
-name: Test Create Release
+name: Create Release
 
 jobs:
-  helloworld:
-    name: Hello World Release
+  create-release:
+    name: Build and Publish Release
     runs-on: ubuntu-latest
     steps:
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=ABCTL_VERSION::${GITHUB_REF#refs/tags/}
+        run: echo "ABCTL_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
            go-version: 'stable'
       - name: Make Release
-        env:
-          ABCTL_VERSION: ${{ steps.get_version.outputs.ABCTL_VERSION }}
         run: make clean release
-      - name: Test version
+      - name: Check version
         run: ./build/release/abctl-$ABCTL_VERSION-linux-amd64/abctl version
-        env:
-          ABCTL_VERSION: ${{ steps.get_version.outputs.ABCTL_VERSION }}
       - uses: ncipollo/release-action@v1
         with:
           generateReleaseNotes: true
