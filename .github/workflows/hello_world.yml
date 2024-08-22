@@ -11,7 +11,17 @@ jobs:
     name: Hello World Release
     runs-on: ubuntu-latest
     steps:
-      - name: Echo version name
-        run: |
-          env
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=ABCTL_VERSION::${GITHUB_REF#refs/tags/}
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+           go-version: 'stable'
+      - name: Make Release
+        env:
+          ABCTL_VERSION: ${{ steps.get_version.outputs.ABCTL_VERSION }}
+        run: make clean release
+      - name: Test version
+        run: ./build/release/abctl-dev-linux-amd64/abctl version
         
