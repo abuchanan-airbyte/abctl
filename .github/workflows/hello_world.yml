@@ -24,6 +24,8 @@ jobs:
         run: make clean release
       - name: Test version
         run: ./build/release/abctl-$ABCTL_VERSION-linux-amd64/abctl version
+        env:
+          ABCTL_VERSION: ${{ steps.get_version.outputs.ABCTL_VERSION }}
       - uses: ncipollo/release-action@v1
         with:
           generateReleaseNotes: true
