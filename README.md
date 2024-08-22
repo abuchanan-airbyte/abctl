@@ -3,6 +3,8 @@
 Airbyte's command line tool for local Airbyte deployments.
 <br clear="left"/>
 
+v0.0.8
+
 ---
 
 - [Quickstart](#quickstart)
