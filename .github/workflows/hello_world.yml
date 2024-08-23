@@ -32,6 +32,10 @@ jobs:
       - name: Replace version
         run: |
           sed -i 's/ABCTL_VERSION = ".*"/ABCTL_VERSION = "'$ABCTL_VERSION'"/' Formula/abctl.rb
-      - name: Show change
-        run: git status && git diff
+      - name: Show diff
+        run: git diff
+      - name: Commit changes
+        run: git commit -a -m "Update abctl to $ABCTL_VERSION"
+      - name: Push change
+        run: git push
         
