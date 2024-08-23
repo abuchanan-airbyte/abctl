@@ -3,7 +3,7 @@
 Airbyte's command line tool for local Airbyte deployments.
 <br clear="left"/>
 
-v0.0.8
+v0.0.9
 
 ---
 
