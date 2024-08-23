@@ -30,7 +30,8 @@ jobs:
           repository: abuchanan-airbyte/homebrew-tap
           ssh-key: ${{ secrets.ABCTL_HOMEBREW_KEY }}
       - name: Replace version
-        run: sed -i .bak 's/ABCTL_VERSION = ".*"/ABCTL_VERSION = "'$NEW_ABCTL_VERSION'"/' Formula/abctl.rb
+        run: |
+          sed -i '.bak' -e 's/ABCTL_VERSION = ".*"/ABCTL_VERSION = "'$ABCTL_VERSION'"/' Formula/abctl.rb
       - name: Show change
         run: git status && git diff
         
