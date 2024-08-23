@@ -18,7 +18,7 @@ jobs:
         with:
            go-version: 'stable'
       - name: Make Release
-        run: make clean release
+        run: echo make clean release
       - name: Check version
         run: ./build/release/abctl-$ABCTL_VERSION-linux-amd64/abctl version
       - uses: ncipollo/release-action@v1
@@ -35,10 +35,10 @@ jobs:
       - name: Show diff
         run: git diff
       - name: Commit changes
-        run: git commit -a -m "Update abctl to $ABCTL_VERSION"
-        env:
-          GIT_COMMITTER_NAME: abctl release action
-          GIT_COMMITTER_EMAIL: robot@airbyte.io
+        run: |
+          git config user.email "robot@airbyte.io"
+          git config user.name "abctl release action"
+          git commit -a -m "Update abctl to $ABCTL_VERSION"
       - name: Push change
         run: git push
         
