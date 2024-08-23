@@ -14,17 +14,17 @@ jobs:
         id: get_version
         run: echo "ABCTL_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
       - uses: actions/checkout@v4
-      #- uses: actions/setup-go@v5
-      #  with:
-      #     go-version: 'stable'
-      #- name: Make Release
-      #  run: make clean release
-      #- name: Check version
-      #  run: ./build/release/abctl-$ABCTL_VERSION-linux-amd64/abctl version
-      #- uses: ncipollo/release-action@v1
-      #  with:
-      #    generateReleaseNotes: true
-      #    artifacts: "build/release/*.tar.gz"
+      - uses: actions/setup-go@v5
+        with:
+           go-version: 'stable'
+      - name: Make Release
+        run: make clean release
+      - name: Check version
+        run: ./build/release/abctl-$ABCTL_VERSION-linux-amd64/abctl version
+      - uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
+          artifacts: "build/release/*.tar.gz"
       - uses: actions/checkout@v4
         with:
           repository: abuchanan-airbyte/homebrew-tap
