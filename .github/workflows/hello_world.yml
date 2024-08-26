@@ -24,7 +24,7 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           generateReleaseNotes: true
-          artifacts: "build/release/*.tar.gz"
+          artifacts: "build/release/*.tar.gz,build/release/*.zip"
       - uses: actions/checkout@v4
         with:
           repository: abuchanan-airbyte/homebrew-tap
