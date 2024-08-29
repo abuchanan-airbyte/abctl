@@ -23,7 +23,7 @@ builds:
 
 archives:
   - format: tar.gz
-    name_template: {{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}
+    name_template: '{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}'
     # use zip for windows archives
     format_overrides:
       - goos: windows
