@@ -1,37 +1,63 @@
-on:
-  push:
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
 name: Create Release
 
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+
 jobs:
-  create-release:
-    name: Build and Publish Release
     runs-on: ubuntu-latest
     steps:
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ inputs.tag_name }}',
+              sha: context.sha
+            })
       - name: Get the version
         id: get_version
         run: echo "ABCTL_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-go@v5
         with:
            go-version: 'stable'
-      - name: Make Release
-        run: make clean release
-      - name: Check version
-        run: ./build/release/abctl-$ABCTL_VERSION-linux-amd64/abctl version
-      - uses: ncipollo/release-action@v1
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
         with:
-          generateReleaseNotes: true
-          artifacts: "build/release/*.tar.gz,build/release/*.zip"
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
+
+      #- name: Make Release
+        #run: make clean release
+      #- name: Check version
+        #run: ./build/release/abctl-$ABCTL_VERSION-linux-amd64/abctl version
+      #- uses: ncipollo/release-action@v1
+        #with:
+          #generateReleaseNotes: true
+          #artifacts: "build/release/*.tar.gz,build/release/*.zip"
+
       - uses: actions/checkout@v4
         with:
           repository: abuchanan-airbyte/homebrew-tap
           ssh-key: ${{ secrets.ABCTL_HOMEBREW_KEY }}
       - name: Replace version
         run: |
-          sed -i 's/ABCTL_VERSION = ".*"/ABCTL_VERSION = "'$ABCTL_VERSION'"/' Formula/abctl.rb
+          sed -i 's/ABCTL_VERSION = ".*"/ABCTL_VERSION = ${{ inputs.tag_name }}/' Formula/abctl.rb
       - name: Show diff
         run: git diff
       - name: Commit changes
@@ -41,4 +67,3 @@ jobs:
           git commit -a -m "Update abctl to $ABCTL_VERSION"
       - name: Push change
         run: git push
-        
