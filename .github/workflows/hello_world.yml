@@ -13,6 +13,8 @@ permissions:
 
 
 jobs:
+  create-release:
+    name: Build and publish release
     runs-on: ubuntu-latest
     steps:
       - name: Create tag
