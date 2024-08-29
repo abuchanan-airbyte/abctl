@@ -28,9 +28,6 @@ jobs:
               ref: 'refs/tags/${{ inputs.tag_name }}',
               sha: context.sha
             })
-      - name: Get the version
-        id: get_version
-        run: echo "ABCTL_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -53,13 +50,13 @@ jobs:
           ssh-key: ${{ secrets.ABCTL_HOMEBREW_KEY }}
       - name: Replace version
         run: |
-          sed -i 's/ABCTL_VERSION = ".*"/ABCTL_VERSION = ${{ inputs.tag_name }}/' Formula/abctl.rb
+          sed -i 's/ABCTL_VERSION = ".*"/ABCTL_VERSION = "${{ inputs.tag_name }}"/' Formula/abctl.rb
       - name: Show diff
         run: git diff
       - name: Commit changes
         run: |
           git config user.email "robot@airbyte.io"
           git config user.name "abctl release action"
-          git commit -a -m "Update abctl to $ABCTL_VERSION"
+          git commit -a -m "Update abctl to ${{ inputs.tag_name }}"
       - name: Push change
         run: git push
