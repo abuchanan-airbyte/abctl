@@ -1,5 +1,5 @@
 name: Create Release
-run-name: Create Release ${{ inputs.tag_name }}
+run-name: Create Release ${{ inputs.tag_name }} by @${{ github.actor }}
 
 on:
   workflow_dispatch:
