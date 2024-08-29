@@ -40,19 +40,12 @@ jobs:
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
         with:
           distribution: goreleaser
           version: "~> v2"
           args: release --clean
-
-      #- name: Make Release
-        #run: make clean release
-      #- name: Check version
-        #run: ./build/release/abctl-$ABCTL_VERSION-linux-amd64/abctl version
-      #- uses: ncipollo/release-action@v1
-        #with:
-          #generateReleaseNotes: true
-          #artifacts: "build/release/*.tar.gz,build/release/*.zip"
 
       - uses: actions/checkout@v4
         with:
